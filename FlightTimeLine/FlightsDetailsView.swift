@@ -25,6 +25,7 @@ struct FlightsDetailsView: View {
         }
         .font(.headline)
         .padding()
+        .navigationTitle("Flight Details") // заголовок
     }
 }
 

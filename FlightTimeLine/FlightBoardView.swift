@@ -22,7 +22,9 @@ struct FlightBoardView: View {
     var body: some View {
         //  ScrollView([.horizontal, .vertical]) { скролинг во све стороны
         List(shownFlights) { flight in // готовый список со скролом
-            FlightRowView(flight: flight)
+            NavigationLink(destination: FlightsDetailsView(flight: flight)) {
+                FlightRowView(flight: flight)
+            }
         }
         .listStyle(.plain)
         .navigationTitle(boardName)

@@ -7,8 +7,37 @@
 
 import SwiftUI
 
+enum Route {
+    case arrivals
+    case departures
+    case timeline
+    
+    var title: String {
+        switch self {
+        case .arrivals:
+            "Arrivals"
+        case .departures:
+            "Departures"
+        case .timeline:
+            "Flight Timeline"
+        }
+    }
+}
+
 struct HomeScreenView: View {
     private let flights = FlightInformation.generateFlights() // иниц класса
+    
+    private var arrivals: [FlightInformation] {
+        flights.filter {
+            $0.direction == .departure
+        }
+    }
+    
+    private var departures: [FlightInformation] {
+        flights.filter {
+            $0.direction == .arrival
+        }
+    }
     
     var body: some View {
         NavigationStack { // помещаем чтоб работали ссылки
@@ -20,23 +49,9 @@ struct HomeScreenView: View {
                     .rotationEffect(.degrees(-90)) // поворот на лево
                 
                 VStack(alignment: .leading, spacing: 10) { // выравнивание и расстояние
-                    NavigationLink("Arrivals") { // ссылка
-                        FlightBoardView(
-                            boardName: "Arrivals",
-                            flights: flights.filter { $0.direction == .arrival }
-                        ) // фильтруем и передаем только прибытие
-                    }
-                    
-                    NavigationLink("Departures") { // ссылка
-                        FlightBoardView(
-                            boardName: "Departures",
-                            flights: flights.filter { $0.direction == .departure }
-                        ) // фильтруем и передаем только отправление
-                    }
-                    
-                    NavigationLink("Flight Timeline") { // ссылка
-                        TimelineView(flights: flights)
-                    }
+                    NavigationLink(Route.arrivals.title, value: Route.arrivals)
+                    NavigationLink(Route.departures.title, value: Route.departures)
+                    NavigationLink(Route.timeline.title, value: Route.timeline)
                     
                     Spacer() // поднимаем ссылки вверх
                 }
@@ -44,6 +59,16 @@ struct HomeScreenView: View {
                 .padding()
             }
             .navigationTitle("Airport")
+            .navigationDestination(for: Route.self) { route in
+                switch route {
+                case .arrivals:
+                    FlightBoardView(boardName: Route.arrivals.title, flights: arrivals)
+                case .departures:
+                    FlightBoardView(boardName: Route.departures.title, flights: departures)
+                case .timeline:
+                    TimelineView(flights: flights)
+                }
+            }
         }
     }
 }
