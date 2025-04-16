@@ -8,13 +8,22 @@
 import SwiftUI
 
 struct FlightRowView: View {
-    
+    let flight: FlightInformation
     
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        HStack {
+            Text("\(flight.airline) \(flight.number)")
+                .frame(width: 120, alignment: .leading) // размер, по лев краю
+            Text(flight.otherAirport)
+                .frame(alignment: .leading)
+            
+            Spacer()
+            
+            Text(flight.flightStatus)
+        }
     }
 }
 
 #Preview {
-    FlightRowView()
+    FlightRowView(flight: FlightInformation.generateFlight())
 }

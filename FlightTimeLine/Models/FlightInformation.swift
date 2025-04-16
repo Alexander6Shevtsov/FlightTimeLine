@@ -13,8 +13,8 @@ enum FlightStatus: String, CaseIterable {
     case departed = "Departed"
 }
 
-class FlightInformation: NSObject {
-    let id: Int
+class FlightInformation: NSObject, Identifiable { // можно подписать под Identifiable
+    let id: Int // если есть id
     let airline: String
     let number: String
     let otherAirport: String
