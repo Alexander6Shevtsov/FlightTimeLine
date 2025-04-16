@@ -8,16 +8,29 @@
 import SwiftUI
 
 struct FlightBoardView: View {
+    @State private var hiddenCanceled = false // кнопка фильтра
+    
     let boardName: String // через иниц
     let flights: [FlightInformation]
     
+    private var shownFlights: [FlightInformation] { // логика фильтра
+        hiddenCanceled
+        ? flights.filter { $0.status != .cancelled }
+        : flights
+    }
+    
     var body: some View {
         //  ScrollView([.horizontal, .vertical]) { скролинг во све стороны
-        List(flights) { flight in // готовый список со скролом
+        List(shownFlights) { flight in // готовый список со скролом
             FlightRowView(flight: flight)
         }
         .listStyle(.plain)
         .navigationTitle(boardName)
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                Toggle("Hide canceled", isOn: $hiddenCanceled)
+            }
+        }
     }
 }
 
